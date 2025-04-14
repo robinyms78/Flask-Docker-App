@@ -6,10 +6,8 @@ jobs:
       - image: cimg/base:stable # CircleCI base image with Docker
     steps:
       - checkout
-
       - setup_remote_docker:
           version: 20.10.24   # Enables Docker commands in CircleCI
-
       - run:
           name: Build Docker Image
           command: docker build -f Dockerfile -t robinyms101/flask-docker-app-for-devops:latest .
@@ -19,14 +17,11 @@ jobs:
       - image: cimg/base:stable
     steps:
       - checkout
-
       - setup_remote_docker
-      
       - run:
           name: Login to Docker Hub
           command: |
             echo "$DOCKERHUB_PASSWORD" | docker login --username "$DOCKERHUB_USERNAME" --password-stdin
-
       - run:
           name: Push Docker Image
           command: |
