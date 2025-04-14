@@ -10,7 +10,7 @@ jobs:
           version: 20.10.24   # Enables Docker commands in CircleCI
       - run:
           name: Build Docker Image
-          command: docker build -f Dockerfile -t robinyms101/flask-docker-app-for-devops:latest .
+          command: docker build -t robinyms101/flask-docker-app-for-devops:latest .
 
   publish:
     docker:
