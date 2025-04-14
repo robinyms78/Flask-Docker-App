@@ -1,9 +1,9 @@
 version: 2.1
 
 jobs:
-  build:
+  publish:
     docker:
-      - image: cimg/base:stable # CircleCI base image with Docker
+      - image: cimg/base:stable
     steps:
       - checkout
       - setup_remote_docker:
@@ -11,13 +11,6 @@ jobs:
       - run:
           name: Build Docker Image
           command: docker build -t robinyms101/flask-docker-app-for-devops:latest .
-
-  publish:
-    docker:
-      - image: cimg/base:stable
-    steps:
-      - checkout
-      - setup_remote_docker
       - run:
           name: Login to Docker Hub
           command: |
@@ -32,7 +25,4 @@ workflows:
   version: 2
   build-and-push:
     jobs:
-      - build
-      - publish:
-          requires:
-            - build
+      - publish
