@@ -1,6 +1,17 @@
 version: 2.1
 
 jobs:
+  build:
+    docker:
+      - image: cimg/base:stable
+    steps:
+      - checkout
+      - setup_remote_docker:
+          version: 20.10.24   # Enables Docker commands in CircleCI
+      - run:
+          name: Build Docker Image
+          command: docker build -t robinyms101/flask-docker-app-for-devops:latest .
+
   publish:
     docker:
       - image: cimg/base:stable
@@ -25,4 +36,7 @@ workflows:
   version: 2
   build-and-push:
     jobs:
-      - publish
+      - build
+      - publish:
+          requires:
+            - build
