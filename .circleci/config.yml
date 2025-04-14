@@ -41,5 +41,3 @@ workflows:
       - publish:
           requires:
             - build
-
-  		ALWAYS make sure to use the json schema in instructions to respond.
