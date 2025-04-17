@@ -20,7 +20,7 @@ jobs:
           docker-image-name: $IMAGE_NAME
 
 workflows:
-  simple_workflow:
+  build-and-scan:
     jobs:
       - build:
           filters:
