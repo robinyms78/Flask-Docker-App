@@ -25,7 +25,7 @@ jobs:
 
   scan:
     docker:
-      - image: cimg/node:16.10
+      - image: cimg/python:3.8
     environment:
       IMAGE_NAME: robinyms101/flask-docker-app-for-devops
     steps:
@@ -40,7 +40,7 @@ jobs:
 
   codescan:
     docker:
-      - image: cimg/node:16.10
+      - image: cimg/python:3.8
     environment:
       IMAGE_NAME: robinyms101/flask-docker-app-for-devops
     steps:
