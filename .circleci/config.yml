@@ -18,7 +18,9 @@ jobs:
       - image: cimg/node:16.10
     steps:
       - checkout
-      - node/test
+      - run:
+          name: Run Tests
+          command: npm test
 
   scan:
     docker:
@@ -34,7 +36,7 @@ jobs:
           docker-image-name: $IMAGE_NAME
 
 workflows:
-  scan:
+  simple_workflow:
     jobs:
       - build:
           filters:
