@@ -25,7 +25,7 @@ jobs:
 
   scan:
     docker:
-      - image: cimg/node:16.10
+      - image: cimg/python:3.8
     environment:
       IMAGE_NAME: robinyms101/flask-docker-app-for-devops
     steps:
@@ -40,7 +40,7 @@ jobs:
 
   codescan:
     docker:
-      - image: cimg/node:16.10
+      - image: cimg/python:3.8
     environment:
       IMAGE_NAME: robinyms101/flask-docker-app-for-devops
     steps:
@@ -50,9 +50,8 @@ jobs:
           docker-username: DOCKERHUB_USERNAME
           docker-password: DOCKERHUB_PASSWORD
       - run: docker build -t $IMAGE_NAME .
-      - run:
-          name: Snyk Code Test
-          command: snyk code test
+      - snyk/scan:
+          docker-image-name: $IMAGE_NAME
 
 workflows:
   simple_workflow:
@@ -67,6 +66,7 @@ workflows:
           filters:
             branches:
               only: main
+      # The scan job
       - scan:
           requires:
             - build
