@@ -37,6 +37,7 @@ jobs:
       - run: docker build -t $IMAGE_NAME .
       - snyk/scan:
           docker-image-name: $IMAGE_NAME
+          fail-on-severity: medium
 
   codescan:
     docker:
@@ -52,7 +53,7 @@ jobs:
       - run: docker build -t $IMAGE_NAME .
       - snyk/install
       - run: |
-          snyk code test --severity-threshold=high || echo "Snyk code test completed with issues"
+          snyk code test --severity-threshold=high
 
 workflows:
   simple_workflow:
