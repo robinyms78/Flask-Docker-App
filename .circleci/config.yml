@@ -50,8 +50,8 @@ jobs:
           docker-username: DOCKERHUB_USERNAME
           docker-password: DOCKERHUB_PASSWORD
       - run: docker build -t $IMAGE_NAME .
-      - snyk/install:
-          snyk code test
+      - snyk/code:
+          command: "snyk code test"
 
 workflows:
   simple_workflow:
