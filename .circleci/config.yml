@@ -1,45 +1,41 @@
 version: 2.1
 
 orbs:
+  node: circleci/node@5.0.1
   docker: circleci/docker@2.1.4
+  snyk: snyk/snyk@1.5.0
 
 jobs:
-  build:
+  scan:
     docker:
-      - image: cimg/base:stable
+      - image: cimg/node:16.10
+    environment:
+      IMAGE_NAME: robinyms101/flask-docker-app-for-devops
     steps:
       - checkout
-      - setup_remote_docker:
-          version: 20.10.24   # Enables Docker commands in CircleCI
-      - run:
-          name: Build Docker Image
-          command: docker build -t robinyms101/flask-docker-app-for-devops:latest .
-
-  publish:
-    docker:
-      - image: cimg/base:stable
-    steps:
-      - checkout
-      - setup_remote_docker:
-          version: 20.10.24   # Enables Docker commands in CircleCI
-      - run:
-          name: Build Docker Image
-          command: docker build -t robinyms101/flask-docker-app-for-devops:latest .
-      - run:
-          name: Login to Docker Hub
-          command: |
-            echo "$DOCKERHUB_PASSWORD" | docker login --username "$DOCKERHUB_USERNAME" --password-stdin
-      - run:
-          name: Push Docker Image
-          command: |
-            echo "Push Docker image..."
-            docker push robinyms101/flask-docker-app-for-devops:latest
+      - setup_remote_docker
+      - docker/check
+      - run: docker build -t $IMAGE_NAME .
+      - snyk/scan:
+          docker-image-name: $IMAGE_NAME
 
 workflows:
-  version: 2
-  build-and-push:
+  simple_workflow:
     jobs:
-      - build
-      - publish:
+      - build:
+          filters:
+            branches:
+              only: main
+      - test:
           requires:
             - build
+          filters:
+            branches:
+              only: main
+      # The scan job
+      - scan:
+          requires:
+            - build
+          filters:
+            branches:
+              only: main
