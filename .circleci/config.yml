@@ -1,27 +1,27 @@
 version: 2.1
 
 orbs:
-  node: circleci/node@5.0.1
   docker: circleci/docker@2.1.4
   snyk: snyk/snyk@1.5.0
 
 jobs:
   build:
     docker:
-      - image: cimg/node:16.10
+      - image: cimg/python:3.8
     steps:
       - checkout
-      - node/install-packages:
-          app-dir: "."
+      - run:
+          name: Install Dependencies 
+          command: pip install -r requirements.txt
 
   test:
     docker:
-      - image: cimg/node:16.10
+      - image: cimg/python:3.8
     steps:
       - checkout
       - run:
           name: Run Tests
-          command: npm test
+          command: python -m unittest discover
 
   scan:
     docker:
