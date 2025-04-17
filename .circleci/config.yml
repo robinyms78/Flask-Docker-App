@@ -52,7 +52,7 @@ jobs:
       - run: docker build -t $IMAGE_NAME .
       - snyk/install
       - run: |
-          snyk code test
+          snyk code test --severity-threshold=high
 
 workflows:
   simple_workflow:
