@@ -1,5 +1,9 @@
 version: 2.1
 
+orbs:
+  docker: circleci/docker@2.1.4
+  snyk: snyk/snyk@1.5.0
+
 jobs:
   build:
     docker:
@@ -7,7 +11,7 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Install Dependencies
+          name: Install Dependencies 
           command: pip install -r requirements.txt
 
   test:
@@ -19,10 +23,39 @@ jobs:
           name: Run Tests
           command: python -m unittest discover
 
+  scan:
+    docker:
+      - image: cimg/node:16.10
+    environment:
+      IMAGE_NAME: robinyms101/flask-docker-app-for-devops
+    steps:
+      - checkout
+      - setup_remote_docker
+      - docker/check:
+          docker-username: DOCKERHUB_USERNAME
+          docker-password: DOCKERHUB_PASSWORD
+      - run: docker build -t $IMAGE_NAME .
+      - snyk/scan:
+          docker-image-name: $IMAGE_NAME
+          fail-on-issues: false
+
 workflows:
   simple_workflow:
     jobs:
-      - build
+      - build:
+          filters:
+            branches:
+              only: main
       - test:
           requires:
             - build
+          filters:
+            branches:
+              only: main
+      # The scan job
+      - scan:
+          requires:
+            - build
+          filters:
+            branches:
+              only: main
