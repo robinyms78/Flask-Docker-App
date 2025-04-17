@@ -6,6 +6,20 @@ orbs:
   snyk: snyk/snyk@1.5.0
 
 jobs:
+  build:
+    docker:
+      - image: cimg/node:16.10
+    steps:
+      - checkout
+      - node/install-packages
+
+  test:
+    docker:
+      - image: cimg/node:16.10
+    steps:
+      - checkout
+      - node/test
+
   scan:
     docker:
       - image: cimg/node:16.10
@@ -20,9 +34,21 @@ jobs:
           docker-image-name: $IMAGE_NAME
 
 workflows:
-  simple_workflow:
+  scan:
     jobs:
+      - build:
+          filters:
+            branches:
+              only: main
+      - test:
+          requires:
+            - build
+          filters:
+            branches:
+              only: main
       - scan:
+          requires:
+            - build
           filters:
             branches:
               only: main
