@@ -12,7 +12,7 @@ jobs:
     steps:
       - checkout
       - node/install-packages:
-          app-dir: "."
+          app-dir: "./path/to/your/app"
 
   test:
     docker:
@@ -49,6 +49,7 @@ workflows:
           filters:
             branches:
               only: main
+      # The scan job
       - scan:
           requires:
             - build
